@@ -1,0 +1,49 @@
+service: podcast-admin-api
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 128
+  timeout: 10
+  stage: dev
+  region: us-east-2
+
+functions: # add 4 functions for CRUD
+  create:
+    handler: handler.create # point to exported create function in handler.js
+    events:
+      - http:
+          path: podcasts # path will be domain.name.com/dev/notes
+          method: post
+          cors: true
+  getOne:
+    handler: handler.getOne
+    events:
+      - http:
+          path: podcasts/{id} # path will be domain.name.com/dev/notes/1
+          method: get
+          cors: true
+  getAll:
+    handler: handler.getAll # path will be domain.name.com/dev/notes
+    events:
+      - http:
+          path: podcasts
+          method: get
+          cors: true
+  update:
+    handler: handler.update # path will be domain.name.com/dev/notes/1
+    events:
+      - http:
+          path: podcasts/{id}
+          method: put
+          cors: true
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: podcasts/{id} # path will be domain.name.com/dev/notes/1
+          method: delete
+          cors: true
+
+plugins:
+  - serverless-offline # adding the plugin to be able to run the offline emulation
