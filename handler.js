@@ -12,7 +12,10 @@ module.exports.create = (event, context, callback) => {
       .then(podcast =>
         callback(null, {
           statusCode: 200,
-          body: JSON.stringify(podcast)
+          body: JSON.stringify(podcast),
+          headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:3000/'
+          }
         })
       )
       .catch(err =>
