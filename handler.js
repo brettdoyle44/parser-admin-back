@@ -14,7 +14,8 @@ module.exports.create = (event, context, callback) => {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'Authorization'
           },
           body: JSON.stringify(podcast)
         })
@@ -39,7 +40,8 @@ module.exports.getOne = (event, context, callback) => {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'Authorization'
           },
           body: JSON.stringify(podcast)
         })
@@ -64,7 +66,8 @@ module.exports.getAll = (event, context, callback) => {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'Authorization'
           },
           body: JSON.stringify(podcasts)
         })
@@ -91,7 +94,8 @@ module.exports.update = (event, context, callback) => {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'Authorization'
           },
           body: JSON.stringify(podcast)
         })
@@ -116,7 +120,8 @@ module.exports.delete = (event, context, callback) => {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'Authorization'
           },
           body: JSON.stringify({
             message: 'Removed podcast with id: ' + podcast._id,
