@@ -12,10 +12,11 @@ module.exports.create = (event, context, callback) => {
       .then(podcast =>
         callback(null, {
           statusCode: 200,
-          body: JSON.stringify(podcast),
           headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:3000/'
-          }
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+          },
+          body: JSON.stringify(podcast)
         })
       )
       .catch(err =>
@@ -36,6 +37,10 @@ module.exports.getOne = (event, context, callback) => {
       .then(podcast =>
         callback(null, {
           statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+          },
           body: JSON.stringify(podcast)
         })
       )
@@ -57,6 +62,10 @@ module.exports.getAll = (event, context, callback) => {
       .then(podcasts =>
         callback(null, {
           statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+          },
           body: JSON.stringify(podcasts)
         })
       )
@@ -80,6 +89,10 @@ module.exports.update = (event, context, callback) => {
       .then(podcast =>
         callback(null, {
           statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+          },
           body: JSON.stringify(podcast)
         })
       )
@@ -101,6 +114,10 @@ module.exports.delete = (event, context, callback) => {
       .then(podcast =>
         callback(null, {
           statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+          },
           body: JSON.stringify({
             message: 'Removed podcast with id: ' + podcast._id,
             podcast: podcast
