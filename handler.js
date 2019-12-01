@@ -6,7 +6,6 @@ const Podcast = require('./models/Podcast');
 
 module.exports.create = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
-
   connectToDatabase().then(() => {
     Podcast.create(JSON.parse(event.body))
       .then(podcast =>
