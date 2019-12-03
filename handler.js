@@ -3,31 +3,70 @@
 require('dotenv').config({ path: './variables.env' });
 const connectToDatabase = require('./db');
 const Podcast = require('./models/Podcast');
+let Parser = require('rss-parser');
+let parser = new Parser();
 
-module.exports.create = (event, context, callback) => {
-  context.callbackWaitsForEmptyEventLoop = false;
-  connectToDatabase().then(() => {
-    Podcast.create(JSON.parse(event.body))
-      .then(podcast =>
-        callback(null, {
-          statusCode: 200,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Headers': 'Authorization'
-          },
-          body: JSON.stringify(podcast)
-        })
-      )
-      .catch(err =>
-        callback(null, {
-          statusCode: err.statusCode || 500,
-          headers: { 'Content-Type': 'text/plain' },
-          body: 'Could not create the podcast.'
-        })
-      );
-  });
+module.exports.create = async (event, context) => {
+  // Lambda is async!
+  try {
+    const feed = await parser.parseURL(event.body);
+    const episodes = feed.items.map(episode => {
+      const episodesData = {
+        title: episode.title,
+        subtitle: episode.itunes.subtitle,
+        description: episode.itunes.summary,
+        pubDate: episode.pubDate,
+        audioUrl: episode.enclosure.url
+      };
+      return episodesData;
+    });
+    const data = {
+      author: feed.itunes.author,
+      title: feed.title,
+      description: feed.description,
+      image: feed.itunes.image,
+      episodes: [...episodes]
+    };
+    const db = await connectToDatabase();
+    const createPodcast = await Podcast.create(JSON.parse(data));
+    return {
+      statusCode: 200,
+      body: JSON.stringify(podcast)
+    };
+  } catch (error) {
+    console.error(error.stack);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(error.message)
+    };
+  }
 };
+
+// module.exports.create = (event, context, callback) => {
+//   context.callbackWaitsForEmptyEventLoop = false;
+
+//   connectToDatabase().then(() => {
+//     Podcast.create(JSON.parse(event.body))
+//       .then(podcast =>
+//         callback(null, {
+//           statusCode: 200,
+//           headers: {
+//             'Access-Control-Allow-Origin': '*',
+//             'Access-Control-Allow-Credentials': true,
+//             'Access-Control-Allow-Headers': 'Authorization'
+//           },
+//           body: JSON.stringify(podcast)
+//         })
+//       )
+//       .catch(err =>
+//         callback(null, {
+//           statusCode: err.statusCode || 500,
+//           headers: { 'Content-Type': 'text/plain' },
+//           body: 'Could not create the podcast.'
+//         })
+//       );
+//   });
+// };
 
 module.exports.getOne = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
